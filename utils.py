@@ -1,3 +1,5 @@
+import json
+
 def check_json_format(data):
     try:
         # Check if the required keys exist in the data dictionary
@@ -47,3 +49,18 @@ def check_json_format(data):
         return True, "JSON data format is valid."
     except Exception as e:
         return False, str(e)
+
+
+def filter_json_by_indices(json_file_path, txt_file_path, output_path):
+    with open(json_file_path, 'r', encoding='utf-8') as json_file:
+        json_data = json.load(json_file)
+
+    with open(txt_file_path, 'r') as txt_file:
+        indices = set(line.strip() for line in txt_file)
+
+    filtered_data = [entry for entry in json_data if str(entry.get('iIndex')) in indices]
+
+    with open(output_path, 'w', encoding='utf-8') as output_file:
+        json.dump(filtered_data, output_file, indent=4)
+
+    print("Filtered JSON file created:", output_path)
